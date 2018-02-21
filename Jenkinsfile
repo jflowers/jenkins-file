@@ -18,9 +18,10 @@ pipeline {
     stage("Version"){
       steps{
         script{
+          env['PATH'] = "/usr/local/bin:${env['PATH']}"
           def revCount = sh(returnStdout: true, script: "git rev-list --no-merges --count \$(git rev-parse HEAD) -- .").trim()
           env['VERSION'] = "v${versionMajor}.${versionMinor}.${revCount}-${GIT_BRANCH}"
-          env['DOCKER_TAG'] = "finxact/core:${env.VERSION}"
+          currentBuild.setDisplayName(env['VERSION'])
         }
         echo env.VERSION
       }
